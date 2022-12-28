@@ -33,8 +33,9 @@ import keras
 print('keras: {}'.format(keras.__version__))
 # pickle
 import pickle
+print('pickle: {}'.format(pickle.format_version))
 
-# Fin de importación de
+# Fin de importación de librerías
 
 class my_ML_Agent(Agent):
     """
