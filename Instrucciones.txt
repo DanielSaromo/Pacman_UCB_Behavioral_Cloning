@@ -1,0 +1,12 @@
+PARA GRABAR UNA JUGADA:
+Ejecutar 'python3 pacman.py -r' el número de veces que se requiera grabar juegos de un agente humano.
+Luego, copiar los nombres de los archivos generados, en el fichero 'replayFilenames.txt', siguiendo el formato ya existente.
+
+PARA EXTRAER FEATURES DE JUGADAS GRABADAS:
+Ejecutar 'python3 pacman_extraeFeatures'
+
+PARA JUGAR CON EL AGENTE CLONADO
+Ejecutar 'python3 pacman.py -p my_ML_Agent'
+
+Atentamente,
+Daniel Saromo Mori
