@@ -1,5 +1,5 @@
-numpy
-scikit-learn==1.0.2
-pandas
-matplotlib
-tensorflow
+numpy==1.23.5
+scikit-learn==1.3.0
+pandas==2.1.0
+matplotlib==3.7.2
+tensorflow==2.12.0
