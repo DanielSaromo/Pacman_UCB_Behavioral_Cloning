@@ -5,6 +5,6 @@ ports:
   - port: 6080
     onOpen: open-preview
 tasks:
-  - before: pyenv install 3.10.12; pyenv global 3.10.12
+  - before: echo y | pyenv install 3.10.12; pyenv global 3.10.12
     init: pip3 install -r requirements.txt
     command: python3 pacman.py
