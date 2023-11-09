@@ -42,8 +42,12 @@ print('pickle: {}'.format(pickle.format_version))
 
 # Fin de importación de librerías
 
+# no olvidar actualizar la variable N!
+N=4 # el vector de atributos extra, para el código de ejemplo, tiene 2 elementos
+cantFeatures = 10 + N
+
 # FUNCIÓN PARA OBTENER FEATURES A PARTIR DE UN GAMESTATE
-def obtenerFeatures(gState):
+def obtenerFeatures(gState, agregarExtraAttributes=True):
     """
     Esta es la función que obtiene los features a partir de un GameState del entorno.
     Para el desafío, no es necesario modificar esta función, pero si desea, puede hacerlo, para obtener mejores features para el aprendizaje.
@@ -62,7 +66,12 @@ def obtenerFeatures(gState):
     pac_pos = gState.getPacmanPosition()
     ghosts_poss = gState.getGhostPositions()
 
-    ghosts_poss_relToPacman = np.array([np.array(x) - np.array(pac_pos) for x in ghosts_poss])
+    ghosts_poss_relToPacman = np.array([np.array(x) - np.array(pac_pos) for x in ghosts_poss]).astype(int)
+
+    #print("pacposs", pac_pos)
+    #print("fantasmiposs", ghosts_poss)
+
+    #print("relativePos", ghosts_poss_relToPacman)
 
     features = np.append(features, ghosts_poss_relToPacman)
     
@@ -105,10 +114,70 @@ def obtenerFeatures(gState):
     for ghostState in ghostStates:
         if ghostState.scaredTimer > 0:
             numOfScaredGhosts += 1
+
     features = np.append(features, [numOfScaredGhosts] )
 
-    #mazeDistanceAndFirstAction
-    return features.astype(int)
+    ####### Agregamos un vector N-dimensional con los N atributos extra
+    
+    # Leyenda de los N=4 elementos que vamos a agregar
+    # en el código de ejemplo se agregarán N=4 elementos
+    # (agregaremos un elemento por cada una de las 4 acciones fisicas de mov.)
+    # 1: no wall (dirección válida para moverse)
+    # 2: wall
+
+    # Así se obtiene la lista con las acciones legales, a partir del state actual
+    legalActions = gState.getLegalActions()
+
+    #print("Acciones legales:", legalActions)
+
+    lista_newAttributes = []
+    lista_all_relevant_moves = ['West', 'East', 'North', 'South']
+
+    for ii in range(0,4): # N=4, ya que en este ejemplo agregamos una dimension por cada dirección de mov.
+        # si no es una acción legal, es porque en esa dirección hay un wall
+        if lista_all_relevant_moves[ii] not in legalActions:
+            feature_movil = 2
+        else:
+            feature_movil = 1 
+
+        lista_newAttributes.append(feature_movil)
+
+    if agregarExtraAttributes: features = np.append(features,  lista_newAttributes )
+    
+    #print(features) # en este código de ejemplo, el único valor decimal (non integer) es el
+    # que corresponde al Promedio de las dists manhattan de las 5 comidas más cercanas
+
+    return features
+
+# CLASE QUE IMPLEMENTA UN AGENTE ALEATORIO PERSONALIZABLE
+class my_Random_Agent(Agent):
+    """
+    This is a RANDOM agent!
+    """
+
+    def __init__(self):
+
+        print()
+        print("="*15)
+        print()
+        print("Se inicializó el agente ALEATORIO")
+        print("="*15)
+   
+
+    def getAction(self, state):
+        """
+        Returns the next action in the path chosen earlier (in
+        registerInitialState).  Return Directions.STOP if there is no further
+        action to take.
+
+        state: a GameState object (pacman.py)
+        """
+        features = obtenerFeatures(state).reshape(1,-1)
+
+        # Así se obtiene la lista con las acciones legales, a partir del state actual
+        legalActions = state.getLegalActions()
+
+        return legalActions[  random.randint(1,len(legalActions))-1 ]
 
 # CLASE QUE IMPLEMENTA EL AGENTE BASADO EN BEHAVIORAL CLONING
 class my_ML_Agent(Agent):
@@ -149,7 +218,7 @@ class my_ML_Agent(Agent):
         """
         features = obtenerFeatures(state).reshape(1,-1)
 
-        #Si es un DecisionTreeClassifier
+        #Si es un DecisionTreeClassifier o un RandomForestClassifier
         accionNum = self.modelo.predict(features)
 
         #Si es un keras sequential

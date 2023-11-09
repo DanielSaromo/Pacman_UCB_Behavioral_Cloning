@@ -655,11 +655,10 @@ def loadAgent(pacman, nographics):
                     ' is not specified in any *Agents.py.')
 
 import numpy as np
-cantFeatures = 10
 ficheroRunActual = 'datosRunActual.csv'
 ficheroRunsTotal = 'datosRecolectadosTotal.csv'
 
-from iapucp_agents import obtenerFeatures
+from iapucp_agents import obtenerFeatures, cantFeatures
 
 def enhancedPacmanFeatures(state, action):
 
