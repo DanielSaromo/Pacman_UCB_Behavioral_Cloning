@@ -43,7 +43,7 @@ print('pickle: {}'.format(pickle.format_version))
 # Fin de importación de librerías
 
 # no olvidar actualizar la variable N!
-N=4 # el vector de atributos extra, para el código de ejemplo, tiene 2 elementos
+N=4 # el vector de atributos extra. para el código de ejemplo, cada columna tiene 2 valores posibles
 cantFeatures = 10 + N
 
 # FUNCIÓN PARA OBTENER FEATURES A PARTIR DE UN GAMESTATE
@@ -73,31 +73,44 @@ def obtenerFeatures(gState, agregarExtraAttributes=True):
 
     #print("relativePos", ghosts_poss_relToPacman)
 
+    ############## ############## Features ############## ##############
+
+    # Feature de posición de fantasmas respecto a pacman
+    # 1. 'posx_g1_fromPacman' ('g1x')
+    # 2. 'posy_g1_fromPacman' ('g1y') 
+    # 3. 'posx_g2_fromPacman' ('g2x')
+    # 4. 'posy_g2_fromPacman' ('g2y')
     features = np.append(features, ghosts_poss_relToPacman)
     
-    capsules = gState.getCapsules()
-
     # Feature de cantidad de capsulas
+    # 5. 'capsulas_restantes' ('caps')
+    capsules = gState.getCapsules()
     features = np.append(features, len(capsules))
-
+    
+    # Configuración de food
     state_food = gState.getFood()
     food = [(x, y) #enlista las posiciones donde hay comida
             for x, row in enumerate(state_food)
             for y, food in enumerate(row)
             if food]
-    nearest_ghosts = sorted([util.manhattanDistance(pac_pos, i) for i in ghosts_poss])
-
+ 
     # Feature de Fantasmita Mas Cercano: a cuanta distancia manhattan esta el fantasma mas cercano
+    # 6. 'manhattan_dist_toClosest_ghost' ('dist_ghost')
+    nearest_ghosts = sorted([util.manhattanDistance(pac_pos, i) for i in ghosts_poss])
     features = np.append(features, [ nearest_ghosts[0] ])
-    ############################lo de arriba esta bien
+    
+
     # Feature de Pildora mas cercana #a cuanta distancia manhattan esta la capsula mas cercana
+    # 7. 'manhattan_dist_toClosest_caps' ('dist_caps')
     nearest_caps = sorted([util.manhattanDistance(pac_pos, i) for i in capsules])
     if nearest_caps:
         manhDist_nearestCaps = nearest_caps[0]
     else:
         manhDist_nearestCaps = max(gState.data.layout.width,gState.data.layout.height)
     features = np.append(features, [manhDist_nearestCaps])
+    
     # Feature del promedio de MD a las 5 comidas mas cercanas. Que pasa cuando hay menos de 5?
+    # 8. 'mean_manhDist_5_closests_dots' ('dist_5dots')
     nearest_food = sorted([(util.manhattanDistance(pac_pos, i),i) for i in food])
     nearest_food = nearest_food[:5]
     for i in range(min(len(nearest_food), 5)):
@@ -106,15 +119,18 @@ def obtenerFeatures(gState, agregarExtraAttributes=True):
     features = np.append(features, sum(nearest_food)/len(nearest_food))
 
     # Feature de Score
+    # 9. 'score'
     features = np.append(features, [gState.getScore()] )
 
     # Feature de cantidad de Fantasmitas Asustaditos
+    # 10. 'cant_scared_ghosts' ('scared')
     ghostStates = gState.getGhostStates()
     numOfScaredGhosts = 0
     for ghostState in ghostStates:
         if ghostState.scaredTimer > 0:
             numOfScaredGhosts += 1
 
+    # este es el vector con los 10 atributos iniciales
     features = np.append(features, [numOfScaredGhosts] )
 
     ####### Agregamos un vector N-dimensional con los N atributos extra
@@ -142,7 +158,8 @@ def obtenerFeatures(gState, agregarExtraAttributes=True):
 
         lista_newAttributes.append(feature_movil)
 
-    if agregarExtraAttributes: features = np.append(features,  lista_newAttributes )
+    # Aquí agregamos los N=4 atributos extra
+    if agregarExtraAttributes: features = np.append(features, lista_newAttributes)
     
     #print(features) # en este código de ejemplo, el único valor decimal (non integer) es el
     # que corresponde al Promedio de las dists manhattan de las 5 comidas más cercanas
