@@ -34,8 +34,9 @@ print('pandas: {}'.format(pd.__version__))
 import sklearn
 print('sklearn: {}'.format(sklearn.__version__))
 # keras
+import tensorflow as tf
 import tensorflow.keras as keras
-print('keras: {}'.format(keras.__version__))
+print('tensorflow: {}'.format(tf.__version__))
 # pickle
 import pickle
 print('pickle: {}'.format(pickle.format_version))
