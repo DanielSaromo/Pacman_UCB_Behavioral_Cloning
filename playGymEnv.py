@@ -8,10 +8,11 @@
 # Instrucciones:
 # 1) Subir dos archivos con las redes neuronales de sus agentes ya entrenados en su cuadernillo ipynb:
 #    `agent.keras`, y `agent_v2.keras`.
-# 2) En el archivo `EstimadorEstadosInternos`, debe completar la implementación de:
+# 2) En el archivo `ddqn_sol.py`, debe completar la implementación de:
 #    `EstimadorEstadosInternos`, y `get_reward`. Seguir la teoría vista en clase. Deben ser
 #    las mismas implementaciones usadas en su cuadernillo ipynb.
 # 3) En la línea de comandos, ejecutar: `python playGymEnv.py`.
+# 4) NO debe modificar el presente archivo (`playGymEnv.py`).
 
 # Nota: Si no se modifica la función `get_reward`, pero sí se cumplen las demás instrucciones,
 # el entorno sí será ejecutado, pero el valor de reward y score_puro obtenidos, serán 0.
@@ -35,6 +36,8 @@ def play_MountainCar(agentito, trials = 10):
     agentito.model.compile()
     scores = []
     state_size = agentito.state_size
+
+    print("Cantidad de intentos para el agente:", trials)
 
     for trial in range(1,trials+1):
         game_memory = []
