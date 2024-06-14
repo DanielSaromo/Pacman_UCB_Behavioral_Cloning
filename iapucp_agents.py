@@ -3,9 +3,10 @@ from game import Agent
 from game import Actions
 
 import random
-
 import util
 import searchAgents
+
+AGENTS_SPEED = 0.5 # Este valor puede ser 0.5 o 1
 
 #Importando librerías para ML
 # requiere haber instalado (sugerencia: usar pip): scipy, numpy, matplotlib, pandas, 

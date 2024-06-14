@@ -11,6 +11,7 @@
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
+from iapucp_agents import AGENTS_SPEED
 
 """
 Pacman.py holds the logic for the classic pacman game along with the main
@@ -344,7 +345,7 @@ class PacmanRules:
     These functions govern how pacman interacts with his environment under
     the classic game rules.
     """
-    PACMAN_SPEED = 1
+    PACMAN_SPEED = AGENTS_SPEED
 
     def getLegalActions(state):
         """
@@ -403,7 +404,7 @@ class GhostRules:
     """
     These functions dictate how ghosts interact with their environment.
     """
-    GHOST_SPEED = 1.0
+    GHOST_SPEED = AGENTS_SPEED
 
     def getLegalActions(state, ghostIndex):
         """
