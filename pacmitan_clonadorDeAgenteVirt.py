@@ -55,6 +55,8 @@ import os
 
 import searchAgents
 
+from iapucp_agents import AGENTS_SPEED
+
 ###################################################
 # YOUR INTERFACE TO THE PACMAN WORLD: A GameState #
 ###################################################
@@ -344,7 +346,7 @@ class PacmanRules:
     These functions govern how pacman interacts with his environment under
     the classic game rules.
     """
-    PACMAN_SPEED = 1
+    PACMAN_SPEED = AGENTS_SPEED
 
     def getLegalActions(state):
         """
@@ -403,7 +405,7 @@ class GhostRules:
     """
     These functions dictate how ghosts interact with their environment.
     """
-    GHOST_SPEED = 1.0
+    GHOST_SPEED = AGENTS_SPEED
 
     def getLegalActions(state, ghostIndex):
         """

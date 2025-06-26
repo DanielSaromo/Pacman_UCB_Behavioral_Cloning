@@ -6,7 +6,9 @@ import random
 import util
 import searchAgents
 
-AGENTS_SPEED = 0.5 # Este valor puede ser 0.5 o 1
+AGENTS_SPEED = 1.0 # Este valor puede ser 0.5 o 1
+
+# Las jugadas por defecto que están grabadas en la carpeta replayFolder, tienen un AGENTS_SPEED de 1.0
 
 #Importando librerías para ML
 # requiere haber instalado (sugerencia: usar pip): scipy, numpy, matplotlib, pandas, 
@@ -64,11 +66,27 @@ def obtenerFeatures(gState, agregarExtraAttributes=True):
     #gState_successor = gState.generateSuccessor(0, accion)
     #isWin (1/0), isLose (1/0)
     #features = np.append(features, [ int(gState_successor.isWin()) , int(gState_successor.isLose()) ])
+    
+    # Los siguientes códigos permiten corregir la escala, según el valor de AGENTS_SPEED usado
+    raw_pac = gState.getPacmanPosition()
+    factor = 1.0 / AGENTS_SPEED
 
-    pac_pos = gState.getPacmanPosition()
-    ghosts_poss = gState.getGhostPositions()
+    # properly round to the nearest integer grid‐cell
+    px = ( raw_pac[0] / AGENTS_SPEED + factor/2 ) // factor
+    py = ( raw_pac[1] / AGENTS_SPEED + factor/2 ) // factor
+    pac_pos = ( int(px), int(py) )
 
-    ghosts_poss_relToPacman = np.array([np.array(x) - np.array(pac_pos) for x in ghosts_poss]).astype(int)
+    ghosts_raw = gState.getGhostPositions()
+    ghosts_poss = []
+    for gx, gy in ghosts_raw:
+        gx_sc = ( gx / AGENTS_SPEED + factor/2 ) // factor
+        gy_sc = ( gy / AGENTS_SPEED + factor/2 ) // factor
+        ghosts_poss.append(( int(gx_sc), int(gy_sc) ))
+
+    ghosts_poss_relToPacman = np.array([
+        np.array(g) - np.array(pac_pos)
+        for g in ghosts_poss
+    ], dtype=int)
 
     #print("pacposs", pac_pos)
     #print("fantasmiposs", ghosts_poss)
